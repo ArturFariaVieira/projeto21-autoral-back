@@ -5,12 +5,10 @@ import { loadEnv } from "./config/envs";
 import { connectDb, disconnectDB } from "./config/database";
 import { authenticationRouter } from "./routers/authRouter";
 import { usersRouter } from "./routers/users-router";
+import { appointmentsRouter } from "./routers/appointmentsRouter";
 
 loadEnv();
 
-/*import {
-  
-} from "/routers";*/
 
 const app = express();
 app
@@ -19,6 +17,7 @@ app
   .get("/health", (_req, res) => res.send("OK!"))
   .use(authenticationRouter)
   .use(usersRouter)
+  .use(appointmentsRouter)
   
 
 export function init(): Promise<Express> {
