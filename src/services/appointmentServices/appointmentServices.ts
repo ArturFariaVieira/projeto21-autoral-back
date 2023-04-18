@@ -5,6 +5,8 @@ import { conflictError } from "../../errors/conflict-error";
 import dayjs from "dayjs";
 import { BAD_REQUEST } from "http-status";
 import { PastdataError } from "../../errors/pastdata-error";
+import { unauthorizedError } from "../../errors/unauthorized-error";
+import { notFoundError } from "../../errors/not-found-error";
 
 async function getAppointments (Barber : string){
 
@@ -28,9 +30,19 @@ async function postAppointment(  id: number, userId: number) {
     return newappointment;
 }
 
+async function removeAppointment(id: number, userId: number){
+    const appointment = await appointmentRepository.findAppointmentById(id);
+    if(!appointment) throw notFoundError();
+    if(appointment.userId != userId && appointment.userId != 3){
+        throw unauthorizedError();
+    }
+    const removedAppointment = await appointmentRepository.postAppointment(id, null);
+}
+
 const appointmentServices = {
     getAppointments,
     postAppointment,
+    removeAppointment,
 }
 
 export default appointmentServices;

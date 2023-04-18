@@ -30,7 +30,7 @@ async function findAppointmentById(id : number){
 
 }
 
-async function postAppointment( id: number, userId : number) {
+async function postAppointment( id: number, userId : number | null) {
     console.log(userId);
     return await prisma.appointments.update({
         where : {

@@ -28,3 +28,22 @@ export async function PostAppointment(req: AuthenticatedRequest, res: Response) 
         return res.status(httpStatus.BAD_REQUEST).send(error);
       }
 }
+
+export async function removeAppointment(req: AuthenticatedRequest, res: Response) {
+
+  const   { id }   = req.params;
+  const { userId } = req;
+  try{
+    const appointment = await appointmentServices.removeAppointment(Number(id) , userId);
+    return res.sendStatus(httpStatus.OK);
+
+  } catch (error) {
+    
+        console.log(error)
+        return res.status(httpStatus.BAD_REQUEST).send(error);
+      }
+
+
+
+
+}
