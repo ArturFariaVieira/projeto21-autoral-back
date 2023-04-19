@@ -1,6 +1,6 @@
-import { DateSchema } from "joi";
+import { DateSchema, any } from "joi";
 import { prisma } from "../../config/database";
-import { Prisma } from "@prisma/client";
+import { Appointments, Prisma } from "@prisma/client";
 import dayjs from "dayjs";
 
 
@@ -30,6 +30,47 @@ async function findAppointmentById(id : number){
 
 }
 
+async function findAppointmentsByParams( dateInit: Date, dateEnd: Date, shift : number, weekdays: string[], Barber: string | null){
+    let params;
+    let oneOrBoth = Barber;
+    let Time;
+
+    let params2 = {    }
+
+
+    
+    if(Barber !== ''){
+        params2["Barber"] = Barber ;
+    }
+    if(shift){
+        if (shift == 1 ) {
+            params = {lte: 1130}
+        } 
+        else {  
+            params = { gte: 1400}
+        }
+        params2["Time"] = params
+    }
+    if(dateInit){
+        params2["Day"] = {
+            gte: new Date (dayjs(dateInit).locale('pt-br').format('YYYY-MM-DD')),
+            lte: new Date (dayjs(dateEnd).locale('pt-br').format('YYYY-MM-DD')),
+        }
+    }
+    params2["NOT"] = [{
+        userId: null
+    }]
+    console.log(params2)
+   
+    return await prisma.appointments.findMany({
+        where : 
+            params2
+        
+        
+            
+    })
+}
+
 async function postAppointment( id: number, userId : number | null) {
     console.log(userId);
     return await prisma.appointments.update({
@@ -45,7 +86,8 @@ async function postAppointment( id: number, userId : number | null) {
 const appointmentRepository = {
     getAppointments,
     findAppointmentById,
-    postAppointment
+    postAppointment,
+    findAppointmentsByParams
 };
 
 export default appointmentRepository;

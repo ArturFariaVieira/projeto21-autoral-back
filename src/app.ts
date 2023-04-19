@@ -6,6 +6,7 @@ import { connectDb, disconnectDB } from "./config/database";
 import { authenticationRouter } from "./routers/authRouter";
 import { usersRouter } from "./routers/users-router";
 import { appointmentsRouter } from "./routers/appointmentsRouter";
+import { statisticsRouter } from "./routers/statisticsRouter";
 
 loadEnv();
 
@@ -18,6 +19,7 @@ app
   .use(authenticationRouter)
   .use(usersRouter)
   .use(appointmentsRouter)
+  .use(statisticsRouter)
   
 
 export function init(): Promise<Express> {

@@ -1,9 +1,6 @@
-import { exclude } from "../../utils/prisma-utils";
-import { User } from "@prisma/client";
 import appointmentRepository from "../../repositories/appointment-repository/index"
 import { conflictError } from "../../errors/conflict-error";
 import dayjs from "dayjs";
-import { BAD_REQUEST } from "http-status";
 import { PastdataError } from "../../errors/pastdata-error";
 import { unauthorizedError } from "../../errors/unauthorized-error";
 import { notFoundError } from "../../errors/not-found-error";
@@ -39,10 +36,20 @@ async function removeAppointment(id: number, userId: number){
     const removedAppointment = await appointmentRepository.postAppointment(id, null);
 }
 
+async function getByParams(dateInit: Date | null, dateEnd: Date| null, shift: number | null, weekdays: string[] | null, Barber: string | null){
+    
+    
+        const appointments = await appointmentRepository.findAppointmentsByParams(dateInit, dateEnd, shift, weekdays, Barber)
+        console.log(dayjs(appointments[0].Day).format('dd'))
+        return appointments;
+    
+}
+
 const appointmentServices = {
     getAppointments,
     postAppointment,
     removeAppointment,
+    getByParams
 }
 
 export default appointmentServices;
