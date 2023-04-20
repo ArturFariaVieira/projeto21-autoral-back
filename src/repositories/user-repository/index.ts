@@ -20,9 +20,18 @@ async function create(data: Prisma.UserUncheckedCreateInput) {
   });
 }
 
+async function findbyName( name: string) {
+  return prisma.user.findFirst({
+    where: {
+      name
+    }
+  })
+}
+
 const userRepository = {
   findByEmail,
   create,
+  findbyName
 };
 
 export default userRepository;

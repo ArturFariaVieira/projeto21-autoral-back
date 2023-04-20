@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import { PastdataError } from "../../errors/pastdata-error";
 import { unauthorizedError } from "../../errors/unauthorized-error";
 import { notFoundError } from "../../errors/not-found-error";
+import userRepository from "../../repositories/user-repository";
 
 async function getAppointments (Barber : string){
 
@@ -27,12 +28,28 @@ async function postAppointment(  id: number, userId: number) {
     return newappointment;
 }
 
+async function postAsAdmin( id: number, userName: string){
+    let user = await userRepository.findbyName(userName);
+    if(!user){
+        user = await userRepository.create({
+            name: userName,
+            telNumber: "33999999999",
+            email: `${userName.replace(/\s/g, '')}@salaocarlos.com`,
+            password: `${userName.replace(/\s/g, '')}12345`,
+
+        })
+    }
+    const newAppointment = await postAppointment(id, user.id);
+    return newAppointment;
+
+
+}
+
 async function removeAppointment(id: number, userId: number){
     const appointment = await appointmentRepository.findAppointmentById(id);
     if(!appointment) throw notFoundError();
-    if(appointment.userId != userId && appointment.userId != 3){
-        throw unauthorizedError();
-    }
+    if(appointment.userId != userId && userId != 1) throw unauthorizedError();
+    
     const removedAppointment = await appointmentRepository.postAppointment(id, null);
 }
 
@@ -49,7 +66,8 @@ const appointmentServices = {
     getAppointments,
     postAppointment,
     removeAppointment,
-    getByParams
+    getByParams,
+    postAsAdmin
 }
 
 export default appointmentServices;
