@@ -31,13 +31,8 @@ async function findAppointmentById(id : number){
 }
 
 async function findAppointmentsByParams( dateInit: Date, dateEnd: Date, shift : number, weekdays: string[], Barber: string | null){
-    let params;
-    let oneOrBoth = Barber;
-    let Time;
-
-    let params2 = {    }
-
-
+    let params = {};
+    let params2 = {}
     
     if(Barber !== ''){
         params2["Barber"] = Barber ;
@@ -51,7 +46,7 @@ async function findAppointmentsByParams( dateInit: Date, dateEnd: Date, shift : 
         }
         params2["Time"] = params
     }
-    if(dateInit){
+    if(dateInit && dateEnd){
         params2["Day"] = {
             gte: new Date (dayjs(dateInit).locale('pt-br').format('YYYY-MM-DD')),
             lte: new Date (dayjs(dateEnd).locale('pt-br').format('YYYY-MM-DD')),
@@ -60,14 +55,10 @@ async function findAppointmentsByParams( dateInit: Date, dateEnd: Date, shift : 
     params2["NOT"] = [{
         userId: null
     }]
-    console.log(params2)
    
     return await prisma.appointments.findMany({
         where : 
-            params2
-        
-        
-            
+            params2    
     })
 }
 

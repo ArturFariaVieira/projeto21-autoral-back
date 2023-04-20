@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { duplicatedEmailError } from "./errors";
 
 export async function createUser({name, telNumber, email, password }: CreateUserParams): Promise<User> {
+  
 
   await validateUniqueEmailOrFail(email);
 

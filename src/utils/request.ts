@@ -1,5 +1,5 @@
 import axios from "axios";
-import { requestError } from "@/errors";
+import { requestError } from "../errors/request-error";
 
 async function get(url: string) {
   try {
