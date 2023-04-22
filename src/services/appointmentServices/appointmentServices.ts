@@ -5,6 +5,7 @@ import { PastdataError } from "../../errors/pastdata-error";
 import { unauthorizedError } from "../../errors/unauthorized-error";
 import { notFoundError } from "../../errors/not-found-error";
 import userRepository from "../../repositories/user-repository";
+import { tooManyAppointmentsError } from "../../errors/toomanyAppointments-error";
 
 async function getAppointments (Barber : string){
 
@@ -24,6 +25,9 @@ async function postAppointment(  id: number, userId: number) {
     if(appointment.Day < now ) {
         throw PastdataError('Não é possível agendar em uma data passada');
     }
+    const userAppointments = await appointmentRepository.findbyDateandUser( appointment.Day, userId);
+    if(userAppointments.length> 0) throw tooManyAppointmentsError()
+
     const newappointment = await appointmentRepository.postAppointment(id, userId);
     return newappointment;
 }

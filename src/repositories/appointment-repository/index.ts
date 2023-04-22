@@ -74,11 +74,24 @@ async function postAppointment( id: number, userId : number | null) {
     })
 }
 
+async function findbyDateandUser( date: Date, userId: number) {
+    return prisma.appointments.findMany({
+        where: {
+            Day: {
+                gte: new Date(dayjs(date).locale('pt-br').subtract(5, 'day').format('YYYY-MM-DD')),
+                lte: new Date(dayjs(date).locale('pt-br').add(5, 'day' ).format('YYYY-MM-DD'))
+            },
+            userId
+        }
+    })
+  }
+
 const appointmentRepository = {
     getAppointments,
     findAppointmentById,
     postAppointment,
-    findAppointmentsByParams
+    findAppointmentsByParams,
+    findbyDateandUser
 };
 
 export default appointmentRepository;
