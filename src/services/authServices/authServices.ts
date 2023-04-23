@@ -42,6 +42,7 @@ async function createSession(userId: number) {
 async function validatePasswordOrFail(password: string, userPassword: string) {
   const isPasswordValid = await bcrypt.compare(password, userPassword);
   if (!isPasswordValid) throw invalidCredentialsError();
+  return isPasswordValid;
 }
 
 export type SignInParams = Pick<User, "email" | "password">;
@@ -55,6 +56,7 @@ type GetUserOrFailResult = Pick<User, "id" | "email" | "password">;
 
 const authenticationService = {
   signIn,
+  validatePasswordOrFail
 };
 
 export default authenticationService;

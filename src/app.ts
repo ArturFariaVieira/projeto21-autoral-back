@@ -7,6 +7,7 @@ import { authenticationRouter } from "./routers/authRouter";
 import { usersRouter } from "./routers/users-router";
 import { appointmentsRouter } from "./routers/appointmentsRouter";
 import { statisticsRouter } from "./routers/statisticsRouter";
+import { accountRouter } from "./routers/accountRouter";
 
 loadEnv();
 
@@ -20,6 +21,7 @@ app
   .use(usersRouter)
   .use(appointmentsRouter)
   .use(statisticsRouter)
+  .use(accountRouter)
   
 
 export function init(): Promise<Express> {
