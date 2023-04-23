@@ -86,12 +86,25 @@ async function findbyDateandUser( date: Date, userId: number) {
     })
   }
 
+  async function findUserAppointments(userId : number) {
+
+    return await prisma.appointments.findMany({
+        where: {
+            userId
+        },
+        orderBy: {
+            Day : 'desc'
+        }
+    })
+  }
+
 const appointmentRepository = {
     getAppointments,
     findAppointmentById,
     postAppointment,
     findAppointmentsByParams,
-    findbyDateandUser
+    findbyDateandUser,
+    findUserAppointments
 };
 
 export default appointmentRepository;

@@ -2,6 +2,8 @@ import userRepository from "../../repositories/user-repository";
 import { User } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { duplicatedEmailError } from "./errors";
+import appointmentRepository from "../../repositories/appointment-repository";
+import { unauthorizedError } from "../../errors/unauthorized-error";
 
 export async function createUser({name, telNumber, email, password }: CreateUserParams): Promise<User> {
   
@@ -26,10 +28,12 @@ async function validateUniqueEmailOrFail(email: string) {
 
 
 
+
 export type CreateUserParams = Pick<User, "name" | "telNumber" | "email" | "password">;
 
 const userService = {
   createUser,
+  
 };
 
 export * from "./errors";

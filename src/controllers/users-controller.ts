@@ -1,6 +1,7 @@
 import userService from "../services/users-service";
 import { Request, Response } from "express";
 import httpStatus from "http-status";
+import { AuthenticatedRequest } from "../middlewares/authentication-middleware";
 
 export async function usersPost(req: Request, res: Response) {
   const {name, telNumber,  email, password } = req.body;
@@ -20,3 +21,4 @@ export async function usersPost(req: Request, res: Response) {
     return res.status(httpStatus.BAD_REQUEST).send(error);
   }
 }
+
