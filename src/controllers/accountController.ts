@@ -5,7 +5,6 @@ import httpStatus from "http-status";
 
 export async function getMyappointments(req: AuthenticatedRequest, res: Response) {
     const { userId } = req;
-    console.log(userId)
   
     try { 
      
@@ -42,7 +41,6 @@ export async function updateProfile(req: AuthenticatedRequest, res : Response) {
 
 export async function logOut(req: AuthenticatedRequest, res: Response) {
     const { userId, token } = req; 
-    console.log(token)
 
     try {
         const logout = await accountServices.logOut(userId, token);

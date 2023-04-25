@@ -18,7 +18,7 @@ async function getAppointments (Barber : string){
 
 async function postAppointment(  id: number, userId: number) {
     const appointment = await appointmentRepository.findAppointmentById(id);
-    const now = new Date(dayjs().locale('pt-br').format('YYYY-MM-DD'))
+    const now = new Date(dayjs().locale('pt-br').format('YYYY-MM-DD HH:mm:ss'))
     if(appointment.userId) {
         throw conflictError("Horário já agendado")
     }
@@ -51,17 +51,23 @@ async function postAsAdmin( id: number, userName: string){
 
 async function removeAppointment(id: number, userId: number){
     const appointment = await appointmentRepository.findAppointmentById(id);
-    if(!appointment) throw notFoundError();
+    if(!appointment) {
+        throw notFoundError();
+        }
     if(appointment.userId != userId && userId != 1) throw unauthorizedError();
+    if(appointment && !(appointment.userId != userId && userId != 1)){
+        const removedAppointment = await appointmentRepository.postAppointment(id, null);
+        console.log (removedAppointment)
+        return removedAppointment;
+    }
     
-    const removedAppointment = await appointmentRepository.postAppointment(id, null);
+
 }
 
 async function getByParams(dateInit: Date | null, dateEnd: Date| null, shift: number | null, weekdays: string[] | null, Barber: string | null){
     
     
         const appointments = await appointmentRepository.findAppointmentsByParams(dateInit, dateEnd, shift, weekdays, Barber)
-        console.log(dayjs(appointments[0].Day).format('dd'))
         return appointments;
     
 }

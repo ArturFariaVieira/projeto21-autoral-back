@@ -43,7 +43,6 @@ async function updateProfile(userId: number, name: string, telNumber: string, em
 async function logOut(userId: number, token: string){
 
     const lastsession = await sessionRepository.findLast(userId);
-    console.log(lastsession)
 
 
     return await sessionRepository.deleteSession(lastsession[0].id);

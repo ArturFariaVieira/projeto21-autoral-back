@@ -7,3 +7,5 @@ export const updateProfileSchema = Joi.object({
   password: Joi.string().min(6),
   newPassword: Joi.string().min(6)
 });
+
+

@@ -11,8 +11,7 @@ export async function getAppointments(req: AuthenticatedRequest, res: Response) 
     return res.send(appointments)
   } catch (error) {
 
-    console.log(error)
-    return res.status(httpStatus.BAD_REQUEST).send(error);
+    
   }
 }
 export async function PostAppointment(req: AuthenticatedRequest, res: Response) {
@@ -27,9 +26,11 @@ export async function PostAppointment(req: AuthenticatedRequest, res: Response) 
     const newAppointment = await appointmentServices.postAppointment(id, userId);
     return res.status(httpStatus.OK).send(newAppointment);
   } catch (error) {
-
     console.log(error)
-    return res.status(httpStatus.BAD_REQUEST).send(error);
+    if(error.name == "ConflictError") return res.status(409).send(error.message);
+    if(error.name == "Invalid data Error") return res.status(400).send(error.message)
+    if(error.name == "tooManyAppointmentsError") return res.status(400).send(error.message)
+
   }
 }
 
@@ -37,6 +38,7 @@ export async function removeAppointment(req: AuthenticatedRequest, res: Response
 
   const { id } = req.params;
   const { userId } = req;
+  console.log(req.params)
   try {
     const appointment = await appointmentServices.removeAppointment(Number(id), userId);
     return res.sendStatus(httpStatus.OK);
@@ -45,8 +47,10 @@ export async function removeAppointment(req: AuthenticatedRequest, res: Response
     if(error.name == "UnauthorizedError"){
       return res.status(httpStatus.UNAUTHORIZED).send("Somente o ADMIN ou o dono do agendamento pode desmarcar!")
     }
-    console.log(error)
-    return res.status(httpStatus.BAD_REQUEST).send(error);
+    if(error.name == "NotFoundError"){
+      return res.status(httpStatus.NOT_FOUND).send("noti faund mané")
+    }
+    
   }
 
 
